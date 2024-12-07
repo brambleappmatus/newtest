@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/lib/supabase';
 import { DonationExample } from '@/types/donations';
 
@@ -8,40 +8,30 @@ export function useDonationExamples() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  useEffect(() => {
-    let mounted = true;
+  const fetchRandomExample = useCallback(async () => {
+    try {
+      const { data, error } = await supabase
+        .from('donation_examples')
+        .select('id, example_text');
 
-    async function fetchDonationExamples() {
-      try {
-        const { data, error } = await supabase
-          .from('donation_examples')
-          .select('id, example_text');
-
-        if (error) throw error;
-        
-        if (mounted && data && data.length > 0) {
-          setDonationExamples(data);
-          const randomIndex = Math.floor(Math.random() * data.length);
-          setRandomExample(data[randomIndex]);
-        }
-      } catch (err) {
-        console.error('Error fetching donation examples:', err);
-        if (mounted) {
-          setError(err instanceof Error ? err : new Error('Failed to fetch donation examples'));
-        }
-      } finally {
-        if (mounted) {
-          setIsLoading(false);
-        }
+      if (error) throw error;
+      
+      if (data && data.length > 0) {
+        const randomIndex = Math.floor(Math.random() * data.length);
+        setRandomExample(data[randomIndex]);
+        setDonationExamples(data);
       }
+    } catch (err) {
+      console.error('Error fetching donation examples:', err);
+      setError(err instanceof Error ? err : new Error('Failed to fetch donation examples'));
+    } finally {
+      setIsLoading(false);
     }
-
-    fetchDonationExamples();
-
-    return () => {
-      mounted = false;
-    };
   }, []);
 
-  return { donationExamples, randomExample, isLoading, error };
+  useEffect(() => {
+    fetchRandomExample();
+  }, [fetchRandomExample]);
+
+  return { donationExamples, randomExample, isLoading, error, fetchRandomExample };
 }

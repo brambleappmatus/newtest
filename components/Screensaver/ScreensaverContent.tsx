@@ -34,17 +34,23 @@ const textVariants = {
 
 export default function ScreensaverContent() {
   const [currentScreen, setCurrentScreen] = useState<'hello' | 'donations' | 'facts'>('hello');
-  const { randomExample } = useDonationExamples();
+  const { randomExample, fetchRandomExample } = useDonationExamples();
   const { amount } = useDonationAmount();
-  const { randomFact } = useFacts();
+  const { randomFact, fetchRandomFact } = useFacts();
 
   useEffect(() => {
     const cycleScreens = () => {
       setCurrentScreen('hello');
       
       const timers = [
-        setTimeout(() => setCurrentScreen('donations'), 5000),
-        setTimeout(() => setCurrentScreen('facts'), 10000),
+        setTimeout(() => {
+          fetchRandomExample();
+          setCurrentScreen('donations');
+        }, 5000),
+        setTimeout(() => {
+          fetchRandomFact();
+          setCurrentScreen('facts');
+        }, 10000),
         setTimeout(() => cycleScreens(), 20000) // Reset after 20s total (10s for facts)
       ];
 
@@ -53,7 +59,7 @@ export default function ScreensaverContent() {
 
     const cleanup = cycleScreens();
     return cleanup;
-  }, []);
+  }, [fetchRandomExample, fetchRandomFact]);
 
   return (
     <div className="relative h-full flex flex-col items-center justify-center overflow-hidden">
