@@ -9,7 +9,7 @@ interface InactivityTimerProps {
 export function useInactivityTimer({
   onInactive,
   onActive,
-  timeout = 5000
+  timeout = 80000 // 80 seconds
 }: InactivityTimerProps) {
   const resetTimer = useCallback(() => {
     onActive();

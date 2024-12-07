@@ -11,7 +11,7 @@ export default function Screensaver() {
   useInactivityTimer({
     onInactive: () => setIsActive(true),
     onActive: () => setIsActive(false),
-    timeout: 5000 // 5 seconds
+    timeout: 80000 // 80 seconds
   });
 
   if (!isActive) return null;

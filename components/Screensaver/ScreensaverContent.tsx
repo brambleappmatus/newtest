@@ -168,14 +168,14 @@ export default function ScreensaverContent() {
               exit="exit"
             >
               <motion.h2 
-                className="text-[80px] font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text mb-12"
+                className="text-[60px] font-bold bg-gradient-to-r from-blue-400 to-purple-400 text-transparent bg-clip-text mb-8"
                 variants={textVariants}
               >
                 Did You Know
               </motion.h2>
               {randomFact && (
                 <motion.p 
-                  className="text-[40px] leading-tight font-medium text-blue-300/90"
+                  className="text-[32px] leading-tight font-medium text-blue-300/90 max-w-3xl mx-auto"
                   variants={textVariants}
                 >
                   {randomFact.fact_text} 🐾
